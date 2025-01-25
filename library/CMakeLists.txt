@@ -8,8 +8,18 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(cprime_library VERSION 1.0.0 LANGUAGES C)
 
-# Добавляем исходный файл
+# Добавляем оптимизации компилятора
+set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native -mtune=native")
+set(CMAKE_BUILD_TYPE Release)
+
 add_library(cprime_library SHARED prime.c)
+
+# Включаем векторизацию и другие оптимизации
+target_compile_options(cprime_library PRIVATE
+    -ffast-math
+    -funroll-loops
+    -ftree-vectorize
+)
 
 # Настраиваем свойства для библиотеки
 set_target_properties(cprime_library PROPERTIES
