@@ -1,5 +1,14 @@
 # dart_ffi_primes
 
+## Generate FFI bindings
+
+Generate FFI bindings with **ffigen**
+
+```bash
+dart pub get
+dart run ffigen
+```
+
 ## Compile C library
 
 Compile the C library with **Dart** script
@@ -45,15 +54,6 @@ gcc-14 -shared -o build/libcprime.dylib \
     -march=native \
     -fopenmp \
     library/prime.c
-```
-
-## Generate FFI bindings
-
-Generate FFI bindings with **ffigen**
-
-```bash
-dart pub get
-dart run ffigen
 ```
 
 ## Compile and run Dart code

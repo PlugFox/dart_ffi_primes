@@ -13,11 +13,14 @@ void main() => Future<void>(() {
       runCMakeBuild();
 
       // Copy the compiled library to the assets directory
-      final files = <String>{'libcprime.dylib', 'libcprime.so', 'cprime.dll'}
-          .map((file) => p.join('build', file))
-          .map(io.File.new)
-          .where((file) => file.existsSync());
-      for (final file in files) file.copySync(p.join(assets.path, p.basename(file.path)));
+      final names = <String>{'libcprime.dylib', 'libcprime.so', 'cprime.dll'};
+
+      final files = io.Directory('build')
+          .listSync(recursive: true, followLinks: false)
+          .whereType<io.File>()
+          .where((f) => names.contains(p.basename(f.path)));
+
+      for (final file in files) file.copySync(p.normalize(p.join(assets.path, p.basename(file.path))));
     });
 
 Future<void> runCMakeBuild() async {
@@ -45,6 +48,7 @@ Future<void> runCMakeBuild() async {
   if (cmakeGenerate.exitCode != 0) {
     io.stderr
       ..writeln('Error running CMake generate step:')
+      ..writeln(cmakeGenerate.stdout)
       ..writeln(cmakeGenerate.stderr);
     io.exit(cmakeGenerate.exitCode);
   } else {
@@ -66,8 +70,11 @@ Future<void> runCMakeBuild() async {
       //if (io.Platform.isMacOS) '-D CMAKE_C_COMPILER=gcc-14',
       '--build',
       'build',
+      '--config=Release',
       '--',
-      '-j$threads',
+      if (io.Platform.isMacOS) '-j$threads',
+      if (io.Platform.isLinux) '-j$threads',
+      if (io.Platform.isWindows) '/m:$threads',
     ],
     runInShell: true,
     environment: env,
@@ -76,6 +83,7 @@ Future<void> runCMakeBuild() async {
   if (cmakeBuild.exitCode != 0) {
     io.stderr
       ..writeln('Error running CMake build step:')
+      ..writeln(cmakeBuild.stdout)
       ..writeln(cmakeBuild.stderr);
     io.exit(cmakeBuild.exitCode);
   } else {
