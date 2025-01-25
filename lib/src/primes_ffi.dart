@@ -58,21 +58,27 @@ PrimesLibrary initLibrary() {
 /// Finds prime numbers in the range from [start] to [end] inclusive
 @internal
 List<int> primesFFI(int start, int end) {
-  final lib = _lib ?? initLibrary();
+  final lib = _lib ??= initLibrary();
 
-  final count = ffi.calloc<ffi.Uint32>();
-  //final result = ffi.calloc<ffi.Pointer<ffi.Uint32>>();
-  final result = ffi.malloc<ffi.Pointer<ffi.Uint32>>(end - start + 1);
+  //final count = ffi.calloc<ffi.Uint32>();
+  //final result = ffi.calloc<ffi.Pointer<ffi.Uint32>>(end - start + 1);
+  //final result = ffi.malloc<ffi.Pointer<ffi.Uint32>>(end - start + 1);
+
+  final arena = ffi.Arena();
+  final count = arena<ffi.Uint32>();
+  final result = arena<ffi.Pointer<ffi.Uint32>>(end - start + 1);
 
   try {
     final flag = lib.get_primes(start, end, result, count);
     if (flag != 0) throw Exception('Error calculating primes. Status: $flag');
-    final countValue = count.value;
-    return result.value.asTypedList(countValue);
+    return result.value.asTypedList(count.value);
   } on Exception {
     rethrow;
   } finally {
-    ffi.calloc.free(count);
-    ffi.calloc.free(result);
+    //ffi.calloc.free(count);
+    //ffi.calloc.free(result);
+    arena
+      ..free(count)
+      ..free(result);
   }
 }

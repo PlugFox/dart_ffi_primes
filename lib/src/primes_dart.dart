@@ -10,34 +10,39 @@ List<int> primesDart(int start, int end) {
     throw ArgumentError('Invalid range: start=$start, end=$end');
   }
 
-  // Решето Эратосфена
-  final sieve = Uint8List(end + 1); // Флаг для чисел
-  sieve[0] = 1; // 0 не простое число
-  if (end > 0) sieve[1] = 1; // 1 тоже не простое
+  // Оптимизированное решето с уменьшенным размером
+  final sieveSize = (end ~/ 2) + 1;
+  final sieve = Uint8List(sieveSize);
 
-  for (var i = 2; i * i <= end; i++) {
-    if (sieve[i] == 0) {
-      for (var j = i * i; j <= end; j += i) {
-        sieve[j] = 1; // Отмечаем как составное
+  // Помечаем четные числа, кроме 2
+  for (var i = 3; i * i <= end; i += 2) {
+    if (sieve[i ~/ 2] == 0) {
+      for (var j = i * i; j <= end; j += 2 * i) {
+        sieve[j ~/ 2] = 1;
       }
     }
   }
 
-  // Подсчитываем количество простых чисел в диапазоне
-  var count = 0;
-  for (var i = start; i <= end; i++) {
-    if (sieve[i] == 0) {
+  // Подсчет простых чисел
+  var count = (start <= 2 && end >= 2) ? 1 : 0;
+  for (var i = (start % 2 == 0 ? start + 1 : start); i <= end; i += 2) {
+    if (sieve[i ~/ 2] == 0) {
       count++;
     }
   }
 
-  // Создаём массив точного размера для простых чисел
+  // Создание массива простых чисел
   final primes = Uint32List(count);
   var index = 0;
 
-  // Заполняем массив простыми числами
-  for (var i = start; i <= end; i++) {
-    if (sieve[i] == 0) {
+  // Добавляем 2, если он в диапазоне
+  if (start <= 2 && end >= 2) {
+    primes[index++] = 2;
+  }
+
+  // Заполнение массива простыми числами
+  for (var i = (start % 2 == 0 ? start + 1 : start); i <= end; i += 2) {
+    if (sieve[i ~/ 2] == 0) {
       primes[index++] = i;
     }
   }
