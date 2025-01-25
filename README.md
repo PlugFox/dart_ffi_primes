@@ -2,11 +2,13 @@
 
 ## Compile C library
 
+Compile the C library with **Dart** script
+
 ```bash
 dart run tool/compile.dart
 ```
 
-or
+or directly with **CMake**
 
 ```bash
 mkdir build
@@ -15,7 +17,7 @@ cmake ../library/
 cmake --build .
 ```
 
-or for macOS with standard C compiler
+or for **macOS** with standard C compiler
 
 ```bash
 mkdir build
@@ -28,7 +30,7 @@ gcc -shared -o build/libcprime.dylib \
     library/prime.c
 ```
 
-or for macOS with GCC 14 (installed via Homebrew)
+or for **macOS** with GCC 14 (installed via Homebrew)
 
 ```bash
 mkdir build
@@ -47,6 +49,8 @@ gcc-14 -shared -o build/libcprime.dylib \
 
 ## Generate FFI bindings
 
+Generate FFI bindings with **ffigen**
+
 ```bash
 dart pub get
 dart run ffigen
@@ -54,11 +58,13 @@ dart run ffigen
 
 ## Compile and run Dart code
 
+Run the Dart code with **Dart VM**
+
 ```bash
 dart run bin/main.dart -s 1 -e 10000000
 ```
 
-or
+or compile and run the Dart code with **Dart Runtime**
 
 ```bash
 dart compile exe bin/main.dart -o ./build/primes.exe
