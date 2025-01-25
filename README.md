@@ -25,12 +25,12 @@ dart run ffigen
 ## Compile and run Dart code
 
 ```bash
-dart run bin/main.dart -s=1 -e=100
+dart run bin/main.dart -s 1 -e 100
 ```
 
 or
 
 ```bash
 dart compile exe bin/main.dart -o ./build/primes.exe
-./build/primes.exe -s=1 -e=100
+./build/primes.exe -s 1 -e 100
 ```
