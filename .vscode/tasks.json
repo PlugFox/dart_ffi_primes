@@ -1,0 +1,188 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dart:pub:get",
+      "detail": "Get dependencies for the project",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "cloud-download"
+      },
+      "dependsOn": [],
+      "type": "shell",
+      "command": "dart pub get",
+      "args": [],
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    },
+    {
+      "label": "dart:generate:ffi",
+      "detail": "Generate FFI bindings for the project",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "code"
+      },
+      "type": "shell",
+      "command": "dart run ffigen",
+      "dependsOn": [
+        "dart:pub:get"
+      ],
+      "args": [],
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    },
+    {
+      "label": "dart:build_runner:all",
+      "detail": "Generate code for the project",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "code"
+      },
+      "type": "shell",
+      "command": [
+        "dart run build_runner build --delete-conflicting-outputs",
+        "&& dart format --fix -l 80 lib test tool example"
+      ],
+      "dependsOn": [
+        "dart:dependencies",
+        "dart:generate-protobuf"
+      ],
+      "args": [],
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    },
+    {
+      "label": "dart:build_runner:dir",
+      "detail": "Generate code for the directory",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "code"
+      },
+      "command": [
+        "dart run build_runner build --build-filter '${fileDirname}/*.dart'",
+        "&& dart format --fix -l 80 '${fileDirname}'"
+      ],
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "dependsOn": [
+        "dart:pub:get"
+      ],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    },
+    {
+      "label": "dart:build_runner:watch",
+      "detail": "Watch for changes in the project",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "code"
+      },
+      "command": "dart run build_runner watch --build-filter \"${input:directory}/**/*.dart\"",
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "dependsOn": [
+        "dart:pub:get"
+      ],
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    },
+    {
+      "label": "dart:format",
+      "detail": "Format all files in the project",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "lightbulb-autofix"
+      },
+      "type": "shell",
+      "command": [
+        "dart format --fix -l 120 lib test tool example"
+      ],
+      "dependsOn": [],
+      "args": [],
+      "group": {
+        "kind": "none",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+        "group": "dart"
+      }
+    }
+  ]
+}

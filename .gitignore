@@ -1,0 +1,13 @@
+# Dart
+.dart_tool/
+pubspec.lock
+
+# Generated files
+lib/**/*.g.dart
+assets/*.dylib
+assets/*.dll
+assets/*.so
+
+# Build files
+build/
+out/

@@ -1,0 +1,98 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "[Dart] Example (debug)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "cwd": "${workspaceFolder}/example/echo",
+      "program": "main.dart",
+      "env": {
+        "ENVIRONMENT": "local"
+      },
+      "console": "debugConsole",
+      "runTestsOnDevice": false,
+      "toolArgs": [],
+      "args": []
+    },
+    // https://pub.dev/packages/test
+    // dart test test/unit_test.dart --color --platform=vm
+    {
+      "name": "[Dart] Unit test (vm)",
+      "request": "launch",
+      "type": "dart",
+      "program": "test/unit_test.dart",
+      "env": {
+        "ENVIRONMENT": "test"
+      },
+      "console": "debugConsole",
+      "runTestsOnDevice": false,
+      "templateFor": "test",
+      "toolArgs": [
+        "--color",
+        "--debug",
+        "--platform=vm",
+        "--compiler=kernel",
+        "--coverage=coverage",
+        "--reporter=expanded",
+        "--file-reporter=json:coverage/tests.json",
+        "--timeout=30s",
+        "--concurrency=12"
+        /* "--name=handles failed connection attempts" */
+      ],
+      "args": []
+    },
+    // dart test test/unit_test.dart --color --platform=chrome
+    {
+      "name": "[Dart] Unit Test (dart2js)",
+      "request": "launch",
+      "type": "dart",
+      "program": "test/unit_test.dart",
+      "env": {
+        "ENVIRONMENT": "test"
+      },
+      "console": "debugConsole",
+      "runTestsOnDevice": false,
+      "templateFor": "test",
+      "toolArgs": [
+        "--color",
+        "--debug",
+        "--platform=chrome",
+        "--compiler=dart2js",
+        "--coverage=coverage",
+        "--reporter=expanded",
+        "--file-reporter=json:coverage/tests.json",
+        "--timeout=30s",
+        "--concurrency=12",
+        /* "--name=Disconnect_permanent" */
+      ],
+      "args": []
+    },
+    {
+      "name": "[Dart] Unit Test (dart2wasm)",
+      "request": "launch",
+      "type": "dart",
+      "program": "test/unit_test.dart",
+      "env": {
+        "ENVIRONMENT": "test"
+      },
+      "console": "debugConsole",
+      "runTestsOnDevice": false,
+      "templateFor": "test",
+      "toolArgs": [
+        "--color",
+        "--debug",
+        "--platform=chrome",
+        "--compiler=dart2wasm",
+        "--coverage=coverage",
+        "--reporter=expanded",
+        "--file-reporter=json:coverage/tests.json",
+        "--timeout=30s",
+        "--concurrency=12",
+        /* "--name=can send binary data" */
+      ],
+      "args": []
+    }
+  ]
+}
