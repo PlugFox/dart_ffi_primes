@@ -61,7 +61,8 @@ List<int> primesFFI(int start, int end) {
   final lib = _lib ?? initLibrary();
 
   final count = ffi.calloc<ffi.Uint32>();
-  final result = ffi.calloc<ffi.Pointer<ffi.Uint32>>();
+  //final result = ffi.calloc<ffi.Pointer<ffi.Uint32>>();
+  final result = ffi.malloc<ffi.Pointer<ffi.Uint32>>(end - start + 1);
 
   try {
     final flag = lib.get_primes(start, end, result, count);
