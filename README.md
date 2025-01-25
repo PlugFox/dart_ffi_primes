@@ -38,6 +38,10 @@ gcc-14 -shared -o build/libcprime.dylib \
     -funroll-loops \
     -ftree-vectorize \
     -fomit-frame-pointer \
+    -flto \
+    -fno-semantic-interposition  \
+    -march=native \
+    -fopenmp \
     library/prime.c
 ```
 
