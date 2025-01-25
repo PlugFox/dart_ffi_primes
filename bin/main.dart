@@ -35,8 +35,8 @@ void main(List<String> arguments) {
   final usFfi = ffi.measure();
 
   io.stdout
-    ..writeln('Dart find ${dart.result.length} primes in ${usDart.toStringAsFixed(2)} us.')
-    ..writeln('FFI find ${ffi.result.length} primes in ${usFfi.toStringAsFixed(2)} us.')
+    ..writeln('Dart find ${dart.result.length} primes in ${usDart.round()} us.')
+    ..writeln('FFI find ${ffi.result.length} primes in ${usFfi.round()} us.')
     ..writeln('${usDart < usFfi ? 'Dart' : 'FFI'} '
         'is ${(usDart < usFfi ? usFfi / usDart : usDart / usFfi).toStringAsFixed(2)}x faster');
 }

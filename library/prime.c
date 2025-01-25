@@ -2,7 +2,14 @@
 #include <stdbool.h> // Для типа bool
 #include <stdlib.h>  // Для malloc
 
+// Макрос для безопасного выделения памяти
+#define SAFE_MALLOC(ptr, size) do { \
+    (ptr) = malloc(size); \
+    if (!(ptr)) return -2; \
+} while(0)
+
 // Функция для вычисления простых чисел
+__attribute__((hot)) // Подсказка компилятору для оптимизации
 int get_primes(uint32_t start, uint32_t end, uint32_t** result, uint32_t* count) {
     if (start > end || !result || !count) {
         return -1;
@@ -35,7 +42,7 @@ int get_primes(uint32_t start, uint32_t end, uint32_t** result, uint32_t* count)
     }
 
     // Выделение памяти
-    *result = malloc(*count * sizeof(uint32_t));
+    SAFE_MALLOC(*result, *count * sizeof(uint32_t));
     if (!*result) {
         free(sieve);
         return -2;
