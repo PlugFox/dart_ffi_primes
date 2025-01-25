@@ -1,24 +1,46 @@
-# Пример компиляции для Linux
-# $ gcc -shared -o libcprime.so -fPIC prime.c
-# Пример компиляции для macOS
-# $ gcc -shared -o libcprime.dylib -fPIC prime.c
-# Пример компиляции для Windows
-# $ gcc -shared -o cprime.dll prime.c -Wl,--out-implib,libcprime.a
+#set(CMAKE_C_COMPILER "gcc-14")
+#set(CMAKE_CXX_COMPILER "/usr/bin/g++-4.2")
 
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(cprime_library VERSION 1.0.0 LANGUAGES C)
 
-# Добавляем оптимизации компилятора
-set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native -mtune=native")
-set(CMAKE_BUILD_TYPE Release)
+# Установка стандартов C и включение диагностики
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+# Настройка типов сборки и оптимизаций
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Общие опции компиляции
+if (WIN32)
+    message(STATUS "Platform: Windows")
+    set(CMAKE_C_FLAGS "-O3 -mcpu=native -mtune=native -ffast-math -funroll-loops -ftree-vectorize -fomit-frame-pointer")
+    set(CMAKE_C_FLAGS_DEBUG "-g")
+    set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native -mtune=native -DNDEBUG")
+elseif(APPLE)
+    message(STATUS "Platform: macOS")
+    set(CMAKE_C_FLAGS "-O3 -mcpu=native -mtune=native -ffast-math -funroll-loops -ftree-vectorize -fomit-frame-pointer")
+    set(CMAKE_C_FLAGS_DEBUG "-g")
+    set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
+else()
+    message(STATUS "Platform: Linux")
+    set(CMAKE_C_FLAGS "-O3 -mcpu=native -mtune=native -ffast-math -funroll-loops -ftree-vectorize -fomit-frame-pointer")
+    set(CMAKE_C_FLAGS_DEBUG "-g")
+    set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native -mtune=native -DNDEBUG")
+endif()
 
 add_library(cprime_library SHARED prime.c)
 
-# Включаем векторизацию и другие оптимизации
+# Оптимизации для производительности
 target_compile_options(cprime_library PRIVATE
+    -O3
     -ffast-math
     -funroll-loops
     -ftree-vectorize
+    -fomit-frame-pointer
 )
 
 # Настраиваем свойства для библиотеки
@@ -38,11 +60,12 @@ else()
     set_target_properties(cprime_library PROPERTIES SUFFIX ".so")
 endif()
 
-# Опционально: создаём исполняемый файл для тестирования
-#add_executable(cprime_test main.c)
-
 # Указываем, куда будет установлена библиотека
 install(TARGETS cprime_library DESTINATION lib)
+#install(TARGETS cprime_library
+#    LIBRARY DESTINATION lib
+#    PUBLIC_HEADER DESTINATION include
+#)
 
 # Устанавливаем файлы (для каждой платформы своя папка)
 #if (WIN32)
@@ -52,6 +75,10 @@ install(TARGETS cprime_library DESTINATION lib)
 #else()
 #    install(TARGETS cprime_library DESTINATION ../assets/lib/linux)
 #endif()
+
+# Опционально: создаём исполняемый файл для тестирования
+#add_executable(prime_test main.c)
+#target_link_libraries(prime_test PRIVATE cprime_library)
 
 # Устанавливаем заголовочные файлы (опционально)
 #install(FILES prime.h DESTINATION include)

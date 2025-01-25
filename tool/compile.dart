@@ -22,6 +22,14 @@ void main() => Future<void>(() {
 
 Future<void> runCMakeBuild() async {
   final buildDir = io.Directory('build');
+  final env = {
+    ...io.Platform.environment,
+    // Use GCC on macOS from Homebrew
+    //if (io.Platform.isMacOS) ...{
+    //  'CC': 'gcc-14',
+    //  'CXX': 'g++-14',
+    //},
+  };
 
   // Создаём директорию для сборки, если её нет
   if (!buildDir.existsSync()) buildDir.createSync();
@@ -31,6 +39,7 @@ Future<void> runCMakeBuild() async {
     'cmake',
     ['library', '-B', 'build'],
     runInShell: true,
+    environment: env,
   );
 
   if (cmakeGenerate.exitCode != 0) {
@@ -49,10 +58,19 @@ Future<void> runCMakeBuild() async {
       ? io.Platform.numberOfProcessors.toString()
       : (await io.Process.run('nproc', [])).stdout.trim();
 
+  // -DCMAKE_C_COMPILER=/opt/homebrew/bin/gcc
   final cmakeBuild = await io.Process.run(
     'cmake',
-    ['--build', 'build', '--', '-j$threads'],
+    [
+      // Use GCC on macOS from Homebrew
+      //if (io.Platform.isMacOS) '-D CMAKE_C_COMPILER=gcc-14',
+      '--build',
+      'build',
+      '--',
+      '-j$threads',
+    ],
     runInShell: true,
+    environment: env,
   );
 
   if (cmakeBuild.exitCode != 0) {

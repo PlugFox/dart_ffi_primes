@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
@@ -15,7 +16,8 @@ List<int> primesDart(int start, int end) {
   final sieve = Uint8List(sieveSize);
 
   // Помечаем четные числа, кроме 2
-  for (var i = 3; i * i <= end; i += 2) {
+  final to = math.sqrt(end).ceil();
+  for (var i = 3; i <= to; i += 2) {
     if (sieve[i ~/ 2] == 0) {
       for (var j = i * i; j <= end; j += 2 * i) {
         sieve[j ~/ 2] = 1;

@@ -1,6 +1,7 @@
 #include "prime.h"
-#include <stdbool.h> // Для типа bool
-#include <stdlib.h>  // Для malloc
+#include <stdbool.h>
+#include <stdlib.h>
+#include <math.h>
 
 // Макрос для безопасного выделения памяти
 #define SAFE_MALLOC(ptr, size) do { \
@@ -23,7 +24,9 @@ int get_primes(uint32_t start, uint32_t end, uint32_t** result, uint32_t* count)
     }
 
     // Помечаем четные числа, кроме 2
-    for (uint32_t i = 3; i * i <= end; i += 2) {
+    uint32_t to = sqrt(end);
+    for (uint32_t i = 3; i <= to; i += 2) {
+    //for (uint32_t i = 3; i * i <= end; i += 2) {
         if ((sieve[i/2] & 1) == 0) {
             // Пропускаем только нечетные кратные
             for (uint32_t j = i * i; j <= end; j += 2 * i) {

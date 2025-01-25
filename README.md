@@ -15,6 +15,32 @@ cmake ../library/
 cmake --build .
 ```
 
+or for macOS with standard C compiler
+
+```bash
+mkdir build
+gcc -shared -o build/libcprime.dylib \
+    -O3 \
+    -ffast-math \
+    -funroll-loops \
+    -ftree-vectorize \
+    -fomit-frame-pointer \
+    library/prime.c
+```
+
+or for macOS with GCC 14 (installed via Homebrew)
+
+```bash
+mkdir build
+gcc-14 -shared -o build/libcprime.dylib \
+    -O3 \
+    -ffast-math \
+    -funroll-loops \
+    -ftree-vectorize \
+    -fomit-frame-pointer \
+    library/prime.c
+```
+
 ## Generate FFI bindings
 
 ```bash

@@ -11,7 +11,7 @@
 // $ gcc -o build/main library/main.c library/prime.c
 // $ ./build/main
 int main() {
-    uint32_t start = 10, end = 50;
+    uint32_t start = 1000, end = 5000;
     uint32_t* primes = NULL;  // Указатель на массив простых чисел
     uint32_t count = 0;       // Количество найденных чисел
 
