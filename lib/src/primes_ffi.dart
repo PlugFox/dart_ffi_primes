@@ -10,7 +10,8 @@ import 'primes_ffi.g.dart';
 PrimesLibrary? _lib;
 
 /// Initializes the library.
-void initLibrary() {
+@internal
+PrimesLibrary initLibrary() {
   String getPath() {
     final currentPath = io.Directory.current.absolute.path;
 
@@ -26,22 +27,39 @@ void initLibrary() {
       if (io.Platform.isMacOS) {
         file = p.join(path, 'libcprime.dylib');
       } else if (io.Platform.isWindows) {
-        file = p.join(path, 'Debug', 'cprime.dll');
+        file = p.join(path, 'cprime.dll');
       } else {
         file = p.join(path, 'libcprime.so');
       }
       if (io.File(file).existsSync()) return file;
     }
+
+    // Fallback to current path
+    final candidates = io.Directory.current.listSync().whereType<io.File>().where((file) {
+      if (io.Platform.isMacOS && file.path.endsWith('.dylib')) {
+        return true;
+      } else if (io.Platform.isWindows && file.path.endsWith('.dll')) {
+        return true;
+      } else if (file.path.endsWith('.so')) {
+        return true;
+      } else {
+        return false;
+      }
+    }).where((file) => p.basename(file.path).contains('cprime'));
+    final first = candidates.firstOrNull;
+    if (first != null) return first.path;
+
     throw StateError('Library not found');
   }
 
-  _lib = PrimesLibrary(ffi.DynamicLibrary.open(getPath()));
+  return _lib = PrimesLibrary(ffi.DynamicLibrary.open(getPath()));
 }
 
 /// Finds prime numbers in the range from [start] to [end] inclusive
 @internal
 List<int> primesFFI(int start, int end) {
-  final lib = _lib ?? (throw StateError('Library not initialized'));
+  final lib = _lib ?? initLibrary();
+
   final count = ffi.calloc<ffi.Uint32>();
   final result = ffi.calloc<ffi.Pointer<ffi.Uint32>>();
 
